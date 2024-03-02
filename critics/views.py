@@ -15,13 +15,13 @@ def createc(request):
                     text=form.cleaned_data['text'],
                     creator=user
                 )
-                return redirect(f'critics:read:{c.id}')
+                return redirect('read', id=c.id)
             else:
                 return render(request, 'create.html', {'form':form})
         else:
             return render(request, 'create.html', {'form':CriticForm()})
     else:
-        return redirect('critics:login')
+        return redirect('login')
 
 def readc(request, id):
     c = Critic.objects.get(id=id)
@@ -29,17 +29,17 @@ def readc(request, id):
 
 def listc(request):
     cqs = Critic.objects.all()
-    render(request, 'list.html', {'objs':cqs})
+    return render(request, 'list.html', {'objs':cqs})
 
 def deletec(request, id):
     c = Critic.objects.get(id=id)
     if request.user.id == c.creator.id:
         c.delete()
-        return redirect('critics:create')
+        return redirect('create')
 
 def usersignup(request):
     if request.user.is_authenticated:
-        return redirect('critics:logout')
+        return redirect('logout')
     else:
         if request.method == 'POST':
             form = RegisterForm(request.POST)
@@ -50,7 +50,7 @@ def usersignup(request):
                     password=form.cleaned_data['password'],
                 )
                 login(request, user)
-                return redirect('critics:all-c')
+                return redirect('all-c')
             else:
                 return render(request, 'create.html', {'form':form})
         else:
@@ -58,7 +58,7 @@ def usersignup(request):
 
 def userlogin(request):
     if request.user.is_authenticated:
-        return redirect('critics:logout')
+        return redirect('logout')
     else:
         if request.method == 'POST':
             form = LoginForm(request.POST)
@@ -69,7 +69,7 @@ def userlogin(request):
                 )
                 if user:
                     login(request, user)
-                    return redirect('critics:all-c')
+                    return redirect('all-c')
                 else:
                     return render(request, 'create.html', {'form':form})
 
@@ -80,4 +80,4 @@ def userlogin(request):
 
 def userlogout(request):
     logout(request)
-    return redirect('critics:login')
+    return redirect('login')

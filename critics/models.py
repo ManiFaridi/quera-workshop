@@ -7,3 +7,6 @@ class Critic(models.Model):
     text = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     creator = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.title
